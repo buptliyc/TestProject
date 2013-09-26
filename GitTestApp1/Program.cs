@@ -10,6 +10,7 @@ namespace GitTestApp1
     {
         static void Main(string[] args)
         {
+            return null;
         }
     }
 }
