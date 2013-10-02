@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <AppSettingReplace Include="TestAppSetting">
+            <NewValue>222</NewValue>
+        </AppSettingReplace>
+    </ItemGroup>
     <Target Name="Build">
         <MSBuild Projects="GitTestApp1.sln" Targets="Build" />
     </Target> 
