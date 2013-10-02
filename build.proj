@@ -10,8 +10,6 @@
     </ItemGroup>
     <Target Name="Build">
         <MSBuild Projects="GitTestApp1.sln" Targets="Build" />
-    </Target> 
-    <Target Name="AssemblePackage">
 	    <CreateProperty Value="$(TempBuildOutput)\">
 	      <Output TaskParameter="Value" PropertyName="BulidOutputDir" />
 	    </CreateProperty>
