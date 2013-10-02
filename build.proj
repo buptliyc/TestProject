@@ -18,4 +18,12 @@
 		  Value="%(AppSettingReplace.NewValue)"
 		/>
     </Target> 
+    <Target Name="AssemblePackage">
+	    <CreateProperty Value="$(TempBuildOutput)\">
+	      <Output TaskParameter="Value" PropertyName="BulidOutputDir" />
+	    </CreateProperty>
+	    <CreateProperty Value="$(BulidOutputDir)GitTestApp1.exe.config">
+	      <Output TaskParameter="Value" PropertyName="AppConfigFile" />
+	    </CreateProperty>
+	</Target>
 </Project>
