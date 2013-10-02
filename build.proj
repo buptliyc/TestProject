@@ -10,10 +10,7 @@
     </ItemGroup>
     <Target Name="Build">
         <MSBuild Projects="GitTestApp1.sln" Targets="Build" />
-	    <CreateProperty Value="$(TempBuildOutput)\">
-	      <Output TaskParameter="Value" PropertyName="BulidOutputDir" />
-	    </CreateProperty>
-	    <CreateProperty Value="$(BulidOutputDir)GitTestApp1.exe.config">
+	    <CreateProperty Value="C:\Program Files (x86)\Jenkins\jobs\TestJob2\workspace\GitTestApp1\bin\Debug\GitTestApp1.exe.config">
 	      <Output TaskParameter="Value" PropertyName="AppConfigFile" />
 	    </CreateProperty>
 	    <XmlUpdate
