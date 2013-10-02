@@ -10,13 +10,6 @@
     </ItemGroup>
     <Target Name="Build">
         <MSBuild Projects="GitTestApp1.sln" Targets="Build" />
-        <XmlUpdate
-		  Condition="@(AppSettingReplace) != ''"
-		  Namespace="http://schemas.microsoft.com/.NetConfiguration/v2.0"
-		  XmlFileName="$(AppConfigFile)"
-		  XPath="//appSettings/add[@key='@(AppSettingReplace)']/@value"
-		  Value="%(AppSettingReplace.NewValue)"
-		/>
     </Target> 
     <Target Name="AssemblePackage">
 	    <CreateProperty Value="$(TempBuildOutput)\">
@@ -25,5 +18,12 @@
 	    <CreateProperty Value="$(BulidOutputDir)GitTestApp1.exe.config">
 	      <Output TaskParameter="Value" PropertyName="AppConfigFile" />
 	    </CreateProperty>
+	    <XmlUpdate
+		  Condition="@(AppSettingReplace) != ''"
+		  Namespace="http://schemas.microsoft.com/.NetConfiguration/v2.0"
+		  XmlFileName="$(AppConfigFile)"
+		  XPath="//appSettings/add[@key='@(AppSettingReplace)']/@value"
+		  Value="%(AppSettingReplace.NewValue)"
+		/>
 	</Target>
 </Project>
