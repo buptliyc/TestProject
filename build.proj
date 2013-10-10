@@ -7,7 +7,7 @@
 		<DeployFolder>c:\TempDeploy</DeployFolder>
 		<GetBuildVersion>latest</GetBuildVersion>
 		<DeployArchiveName>DeployArchive</DeployArchiveName>
-		<DateTimeNow>$([System.DateTime]::Now)</DateTimeNow>
+		<DateTimeNow>$([System.DateTime]::Now.ToString("yyyy-MM-dd"))</DateTimeNow>
 	<ArchiveBackupDir>c:\Deploy_bak</ArchiveBackupDir>
 	</PropertyGroup>	
 	<ItemGroup>
