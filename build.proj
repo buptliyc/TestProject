@@ -15,6 +15,8 @@
         	</AppSettingReplace>
 	</ItemGroup>
 	<Target Name="Build">
+		<MSBuild.ExtensionPack.FileSystem.Folder TaskAction="Move" Path="$(DeployFolder)\$(GetBuildVersion)" TargetPath="$(DeployFolder)\Archived\$([System.DateTime]::Today.ToString("yyyy.dd.MM"))\" />
+        	<MSBuild.ExtensionPack.FileSystem.Folder TaskAction="RemoveContent" Path="$(DeployFolder)\$(GetBuildVersion)" Force="true" />
         	<MSBuild Projects="GitTestApp1.sln" Targets="Build" Properties="Configuration=Release;OutputPath=$(DeployFolder)\$(GetBuildVersion);OutDir=$(DeployFolder)\$(GetBuildVersion)\ "></MSBuild>
 
 		<CreateProperty Value="C:\Program Files (x86)\Jenkins\jobs\TestJob2\workspace\GitTestApp1\bin\Debug\GitTestApp1.exe.config">
