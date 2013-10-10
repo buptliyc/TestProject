@@ -1,24 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
-	<Import Project="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.tasks"/>
-	
-    <ItemGroup>
-        <AppSettingReplace Include="TestAppSetting">
+    	<Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+    	<Import Project="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.tasks"/>
+	<PropertyGroup>
+		<TempBuildOutput>c:\tempbuild</TempBuildOutput>
+		<DeployFolder>c:\TempDeploy</DeployFolder>
+		<GetBuildVersion>latest</GetBuildVersion>
+		<DeployArchiveName>DeployArchive</DeployArchiveName>
+	<ArchiveBackupDir>c:\Deploy_bak</ArchiveBackupDir>
+	</PropertyGroup>	
+	<ItemGroup>
+        	<AppSettingReplace Include="TestAppSetting">
             <NewValue>222</NewValue>
-        </AppSettingReplace>
-    </ItemGroup>
-    <Target Name="Build">
-        <MSBuild Projects="GitTestApp1.sln" Targets="Build" />
-	    <CreateProperty Value="C:\Program Files (x86)\Jenkins\jobs\TestJob2\workspace\GitTestApp1\bin\Debug\GitTestApp1.exe.config">
-	      <Output TaskParameter="Value" PropertyName="AppConfigFile" />
-	    </CreateProperty>
-	    <XmlUpdate
-		  Condition="@(AppSettingReplace) != ''"
-		  Namespace="http://schemas.microsoft.com/.NetConfiguration/v2.0"
-		  XmlFileName="$(AppConfigFile)"
-		  XPath="//appSettings/add[@key='@(AppSettingReplace)']/@value"
-		  Value="%(AppSettingReplace.NewValue)"
+        	</AppSettingReplace>
+	</ItemGroup>
+	<Target Name="Build">
+        	<MSBuild Projects="GitTestApp1.sln" Targets="Build" />
+        	<CreateProperty Value="$(TempBuildOutput)\">
+      			<Output TaskParameter="Value" PropertyName="BulidOutputDir" />
+		 </CreateProperty>
+		<CreateProperty Value="C:\Program Files (x86)\Jenkins\jobs\TestJob2\workspace\GitTestApp1\bin\Debug\GitTestApp1.exe.config">
+			<Output TaskParameter="Value" PropertyName="AppConfigFile" />
+		</CreateProperty>
+		<XmlUpdate
+			Condition="@(AppSettingReplace) != ''"
+			Namespace="http://schemas.microsoft.com/.NetConfiguration/v2.0"
+			XmlFileName="$(AppConfigFile)"
+			XPath="//appSettings/add[@key='@(AppSettingReplace)']/@value"
+			Value="%(AppSettingReplace.NewValue)"
 		/>
+		<CreateItem Include="$(BulidOutputDir)**" Exclude="$(BulidOutputDir)**\*.pdb">
+      			<Output TaskParameter="Include" ItemName="PublishSource" />
+    		</CreateItem>
+	</Target>
+	
+	<Target Name="CleanBuildOutput">
+		<Message Text="Delete Temp Dir $(TempBuildOutput)" />
+		<MakeDir Directories="$(TempBuildOutput)" ContinueOnError="false" />
+		<MSBuild.ExtensionPack.FileSystem.Folder TaskAction="RemoveContent" Path="$(TempBuildOutput)" Force="true"  />
+	</Target>
+	
+	<Target Name="ArchiveDeploy">
+		<CreateItem Include="$(DeployFolder)\**\*.*">
+			<Output TaskParameter="Include" ItemName="ZipFiles"/>
+		</CreateItem>
+		<MakeDir ContinueOnError="true" Directories="$(ArchiveBackupDir)" />
+		<MSBuild.Community.Tasks.Zip
+		 Files="@(ZipFiles)"
+		 WorkingDirectory="$(DeployFolder)"
+		 ZipFileName="$(ArchiveBackupDir)\$(DeployArchiveName)_pre_$(BuildLabel).zip"
+		 ZipLevel="7" />
+	</Target>
+
+	<Target Name="CleanDeploy">
+		<Message Text="Clean Deploy folder $(DeployFolder)" />
+		<MSBuild.ExtensionPack.FileSystem.Folder TaskAction="RemoveContent" Path="$(DeployFolder)" Force="true" />
+	</Target>
+
+	<Target Name="DeployNewBuild" DependsOnTargets="AssemblePackage">
+		<Copy
+		  SourceFiles="@(PublishSource)"
+		  DestinationFolder="$(DeployFolder)\%(RecursiveDir)"
+		  SkipUnchangedFiles="false" />
+	</Target>
+
+	<Target Name="DeployNewBuildArchive">
+		<MSBuild.Community.Tasks.Zip
+		 Files="@(PublishSource)"
+		 WorkingDirectory="$(BulidOutputDir)"
+		 ZipFileName="$(DeployFolder)\$(DeployArchiveName)_v$(BuildLabel).zip"
+		 ZipLevel="7" />
 	</Target>
 </Project>
