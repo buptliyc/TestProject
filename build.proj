@@ -8,6 +8,7 @@
 		<GetBuildVersion>latest</GetBuildVersion>
 		<DeployArchiveName>DeployArchive</DeployArchiveName>
 		<DateTimeNow>$([System.DateTime]::Now.ToString("yyyy-MM-dd"))</DateTimeNow>
+		<Revision>$(SVN_REVISION)</Revision>
 	<ArchiveBackupDir>c:\Deploy_bak</ArchiveBackupDir>
 	</PropertyGroup>	
 	<ItemGroup>
@@ -16,7 +17,7 @@
         	</AppSettingReplace>
 	</ItemGroup>
 	<Target Name="Build">
-		<MSBuild.ExtensionPack.FileSystem.Folder TaskAction="Move" Path="$(DeployFolder)\$(GetBuildVersion)" TargetPath="$(DeployFolder)\Archived\$(DateTimeNow)\" />
+		<MSBuild.ExtensionPack.FileSystem.Folder TaskAction="Move" Path="$(DeployFolder)\$(GetBuildVersion)" TargetPath="$(DeployFolder)\Archived\$(DateTimeNow)\$(Revision)" />
         	<MSBuild Projects="GitTestApp1.sln" Targets="Build" Properties="Configuration=Release;OutputPath=$(DeployFolder)\$(GetBuildVersion);OutDir=$(DeployFolder)\$(GetBuildVersion)\ "></MSBuild>
 
 		<CreateProperty Value="C:\Program Files (x86)\Jenkins\jobs\TestJob2\workspace\GitTestApp1\bin\Debug\GitTestApp1.exe.config">
