@@ -7,6 +7,7 @@
 		<DeployFolder>c:\TempDeploy</DeployFolder>
 		<GetBuildVersion>latest</GetBuildVersion>
 		<DeployArchiveName>DeployArchive</DeployArchiveName>
+		<DateTimeNow>$([System.DateTime]::Now)</DateTimeNow>
 	<ArchiveBackupDir>c:\Deploy_bak</ArchiveBackupDir>
 	</PropertyGroup>	
 	<ItemGroup>
@@ -15,7 +16,7 @@
         	</AppSettingReplace>
 	</ItemGroup>
 	<Target Name="Build">
-		<MSBuild.ExtensionPack.FileSystem.Folder TaskAction="Move" Path="$(DeployFolder)\$(GetBuildVersion)" TargetPath="$(DeployFolder)\Archived\$([System.DateTime]::Today.ToString("yyyy.dd.MM"))\" />
+		<MSBuild.ExtensionPack.FileSystem.Folder TaskAction="Move" Path="$(DeployFolder)\$(GetBuildVersion)" TargetPath="$(DeployFolder)\Archived\$(DateTimeNow)\" />
         	<MSBuild.ExtensionPack.FileSystem.Folder TaskAction="RemoveContent" Path="$(DeployFolder)\$(GetBuildVersion)" Force="true" />
         	<MSBuild Projects="GitTestApp1.sln" Targets="Build" Properties="Configuration=Release;OutputPath=$(DeployFolder)\$(GetBuildVersion);OutDir=$(DeployFolder)\$(GetBuildVersion)\ "></MSBuild>
 
