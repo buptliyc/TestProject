@@ -4,7 +4,7 @@
     	<Import Project="$(MSBuildExtensionsPath)\ExtensionPack\4.0\MSBuild.ExtensionPack.tasks"/>
 	<PropertyGroup>
 		<TempBuildOutput>c:\tempbuild</TempBuildOutput>
-		<DeployFolder>c:\TempDeploy</DeployFolder>
+		<DeployFolder>\\webclient\WebDev\web02\websites\Jenkins_Test</DeployFolder>
 		<GetBuildVersion>latest</GetBuildVersion>
 		<DeployArchiveName>DeployArchive</DeployArchiveName>
 		<DateTimeNow>$([System.DateTime]::Now.ToString("MM-dd-yyyy_HH-mm-ss"))</DateTimeNow>
